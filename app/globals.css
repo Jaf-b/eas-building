@@ -4,6 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-raleway: var(--font-raleway);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -73,7 +74,7 @@
   --sidebar-foreground: oklch(0.141 0.005 285.823);
   --sidebar-primary: oklch(0.681 0.162 75.834);
   --sidebar-primary-foreground: oklch(0.987 0.026 102.212);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent: oklch(0.852 0.199 91.936);
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.852 0.199 91.936);
@@ -107,19 +108,18 @@
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.795 0.184 86.047);
   --sidebar-primary-foreground: oklch(0.987 0.026 102.212);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent: oklch(0.795 0.184 86.047);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.421 0.095 57.708);
 }
 
-
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 font-raleway;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground ;
   }
   h1{
     @apply font-bold text-2xl;
@@ -135,17 +135,24 @@
   }
 }
 
-
 @layer components {
-  .card{
-    @apply shadow rounded;
-  }
+
 }
-
-
 
 @layer utilities {
   .flex-center{
     @apply flex justify-center items-center ;
+  }
+  .form-input{
+    @apply p-5 text-cyan-500 font-semibold
+  }
+  .sidenav-btn-item{
+    @apply p-6 font-semibold
+  }
+  .card{
+    @apply shadow rounded-xl border border-primary;
+  }
+  .sidenav-group-label-container{
+    @apply my-3
   }
 }

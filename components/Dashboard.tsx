@@ -1,8 +1,11 @@
+"use client"
+import Sidenav from "@/components/sidenav";
+import {archivisteDashboardMenu} from "@/constant";
 
 
 function Dashboard() {
     return (
-        <div>Dashboard</div>
+        <Sidenav items={archivisteDashboardMenu}/>
     )
 }
 

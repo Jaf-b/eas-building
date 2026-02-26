@@ -11,7 +11,6 @@ import {getStorage} from "@firebase/storage";
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 // initialization firebase services
 
