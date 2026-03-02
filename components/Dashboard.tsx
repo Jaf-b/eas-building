@@ -5,7 +5,7 @@ import {archivisteDashboardMenu} from "@/constant";
 
 function Dashboard() {
     return (
-        <Sidenav items={archivisteDashboardMenu}/>
+        <Sidenav items={archivisteDashboardMenu} />
     )
 }
 

@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`dark ${raleway.variable} antialiased`}
+        className={` ${raleway.variable} antialiased`}
       >
         <TooltipProvider>
           {children}

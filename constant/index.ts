@@ -1,22 +1,27 @@
-import { SidenavItem } from "@/types";
-import { Folder, Users } from "lucide-react";
+import {SidenavItem, User} from "@/types";
+import { Folder, Users, LayoutDashboard, Calendar, CheckSquare, BarChart2, CreditCard, LifeBuoy, Users2, FileText, UserPlus, Share2 } from "lucide-react";
 
 export const archivisteDashboardMenu: SidenavItem[] = [
+
     {
-        title: "projets",
+        title: "Projects",
         link: "/projects",
         icon: Folder,
     },
     {
-        title: "liste des utilisateurs",
+        title: "listes des utilisateurs",
         link: "/users",
-        icon: Users,
+        icon: Users2,
     },
-]
+];
+
+
+
 export const juristeDashboardMenu: SidenavItem[] = [
     {
-        title: "projets",
-        link: "/projects",
+        title: "Projects",
+        link: "/",
         icon: Folder,
     },
-]
+];
+

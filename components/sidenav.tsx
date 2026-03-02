@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import {Calendar, Home, Inbox, LayoutDashboard, Search, Settings} from "lucide-react"
 import Link from "next/link";
 import { SidenavItem } from "@/types";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ import { usePathname } from "next/navigation";
 export function Sidenav({items}:{items:SidenavItem[]}) {
     const pathname = usePathname();
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon"  className="mt-15 border bg-transparent">
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel className="sidenav-group-label-container">
@@ -27,13 +27,13 @@ export function Sidenav({items}:{items:SidenavItem[]}) {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarMenuItem>
-                                <SidebarMenuButton 
-                                    className="sidenav-btn-item" 
-                                    isActive={pathname === "/"} 
+                                <SidebarMenuButton
+                                    className="sidenav-btn-item"
+                                    isActive={pathname === "/"}
                                     asChild
                                 >
                                     <Link href="/">
-                                        <Home />
+                                        <LayoutDashboard />
                                         <span>Tableau de bord</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -49,9 +49,9 @@ export function Sidenav({items}:{items:SidenavItem[]}) {
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton 
-                                        className="sidenav-btn-item" 
-                                        isActive={pathname === item.link} 
+                                    <SidebarMenuButton
+                                        className="sidenav-btn-item"
+                                        isActive={pathname === item.link}
                                         asChild
                                     >
                                         <Link href={item.link}>
