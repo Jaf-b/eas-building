@@ -26,7 +26,8 @@ export const loginWithEmailandPassword = async (prevState: unknown, formData: Fo
             cookieStore.set("auth-token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                maxAge: 60 * 60 * 24 * 7, // 1 week
+                sameSite: "lax",
+                maxAge: 60 * 60, // align with 1-hour ID token lifetime
                 path: "/",
             });
         }
