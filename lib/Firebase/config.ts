@@ -16,16 +16,3 @@ export const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
 
-/*
-{items.map((item) => (
-    <SidebarMenuItem key={item.title}>
-    <SidebarMenuButton asChild>
-    <a href={item.url}>
-        <item.icon />
-        <span>{item.title}</span>
-        </a>
-        </SidebarMenuButton>
-        </SidebarMenuItem>
-))}
-
- */

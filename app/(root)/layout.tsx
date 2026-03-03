@@ -4,6 +4,7 @@ import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import Dashboard from "@/components/Dashboard";
 import NavBar from "@/components/NavBar";
 import React from "react";
+import {GlobalProvider} from "@/context/GlobalProvider";
 
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <>
+        <GlobalProvider>
             <NavBar/>
             <SidebarProvider >
                 <Dashboard/>
@@ -28,6 +29,6 @@ export default function RootLayout({
                     </div>
                 </main>
             </SidebarProvider>
-        </>
+        </GlobalProvider>
     );
 }

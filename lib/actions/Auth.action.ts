@@ -2,41 +2,31 @@
 
 
 import {handleError, translateFirebaseError} from "@/lib/utils";
-import {signInWithEmailAndPassword, signOut} from "@firebase/auth";
-import {auth} from "@/lib/Firebase";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import {adminAuth} from "@/lib/Firebase/admin";
 
 
 //Authentication
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-export const loginWithEmailandPassword = async (prevState: unknown, formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
+export const loginWithIdToken = async (idToken: string) => {
     try {
-        // verify if the users exist
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        const cookieStore = await cookies();
+        
+        // Create a session cookie instead of just setting the ID token
+        // This is more secure and recommended for Next.js SSR
+        const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
+        const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
 
-        if (user) {
-            const token = await user.getIdToken();
-            const cookieStore = await cookies();
-            cookieStore.set("auth-token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                maxAge: 60 * 60 * 24 * 7, // 1 week
-                path: "/",
-            });
-        }
+        cookieStore.set("auth-token", sessionCookie, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 60 * 60 * 24 * 5, // 5 days
+            path: "/",
+        });
 
         return { success: true };
     } catch (err) {
         handleError(err);
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         const errorMessage = err instanceof Error ? translateFirebaseError(err.message) : "Une erreur est survenue lors de la connexion.";
         return { success: false, error: errorMessage };
     }
@@ -52,14 +42,13 @@ export const verfyOTP = async (OTP:string) => {}
 export const getCurrentUser = async () => {
     try {
         const cookieStore = await cookies();
-        const token = cookieStore.get("auth-token")?.value;
+        const sessionCookie = cookieStore.get("auth-token")?.value;
 
-        if (!token) return null;
+        if (!sessionCookie) return null;
 
-        // Note: Full verification would require firebase-admin on the server.
-        // For now, we assume if the token exists, we can try to get the user from client SDK if it's still in memory,
-        // or just return that we are authenticated.
-        return auth.currentUser;
+        // Verify the session cookie with firebase-admin
+        const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
+        return decodedClaims;
     } catch (err) {
         return null;
     }
@@ -67,10 +56,19 @@ export const getCurrentUser = async () => {
 
 // logout
 
-export const logout  = async (): Promise<void> => {
+export const logout = async (): Promise<void> => {
     try {
-        await signOut(auth);
         const cookieStore = await cookies();
+        const sessionCookie = cookieStore.get("auth-token")?.value;
+
+        if (sessionCookie) {
+            // Decrypt the session cookie to get the UID and revoke tokens
+            const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie).catch(() => null);
+            if (decodedClaims) {
+                await adminAuth.revokeRefreshTokens(decodedClaims.sub);
+            }
+        }
+
         cookieStore.delete("auth-token");
     } catch (err) {
         handleError(err);

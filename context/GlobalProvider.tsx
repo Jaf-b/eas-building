@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import { User } from "@/types";
 import { handleError } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/actions/Auth.action";
 
 interface GlobalContextType {
   user: User | null;
@@ -22,27 +23,37 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          const userDoc = await getDoc(doc(firestore, "users", firebaseUser.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setUser({
-              id: firebaseUser.uid,
-              ...userData,
-              joinedDate: userData.joinedDate?.toDate ? userData.joinedDate.toDate() : userData.joinedDate,
-            } as User);
-          } else {
-            handleError(new Error("Le document de l'utilisateur n'a pas été trouvé dans Firestore."));
-            setUser(null);
-          }
-        } catch (error) {
-          handleError(error);
+    const fetchUserData = async (uid: string) => {
+      try {
+        const userDoc = await getDoc(doc(firestore, "users", uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUser({
+            id: uid,
+            ...userData,
+            joinedDate: userData.joinedDate?.toDate ? userData.joinedDate.toDate() : userData.joinedDate,
+          } as User);
+        } else {
+          handleError(new Error("Le document de l'utilisateur n'a pas été trouvé dans Firestore."));
           setUser(null);
         }
-      } else {
+      } catch (error) {
+        handleError(error);
         setUser(null);
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        await fetchUserData(firebaseUser.uid);
+      } else {
+        // If client-side SDK says no user, check server-side session cookie
+        const serverUser = await getCurrentUser();
+        if (serverUser) {
+          await fetchUserData(serverUser.uid);
+        } else {
+          setUser(null);
+        }
       }
       setLoading(false);
     });

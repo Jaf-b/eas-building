@@ -3,7 +3,6 @@ import { raleway } from "@/fonts";
 import "./globals.css";
 import {Toaster} from "@/components/ui/sonner";
 import {TooltipProvider} from "@/components/ui/tooltip";
-import {GlobalProvider} from "@/context/GlobalProvider";
 
 export const metadata: Metadata = {
   title: "EAS Building",
@@ -20,12 +19,10 @@ export default function RootLayout({
       <body
         className={` dark ${raleway.variable} antialiased`}
       >
-        <GlobalProvider>
             <TooltipProvider>
               {children}
             </TooltipProvider>
             <Toaster position="top-right" />
-        </GlobalProvider>
       </body>
     </html>
   );
