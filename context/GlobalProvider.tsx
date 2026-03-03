@@ -65,7 +65,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <GlobalContext.Provider value={value}>
-      {!loading && children}
+      {!loading && user ? children : null}
     </GlobalContext.Provider>
   );
 };
