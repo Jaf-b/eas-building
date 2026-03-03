@@ -7,7 +7,7 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 export const firebaseConfig = {
-    apiKey: process.env.NEXT_API_SECRET,
+    apiKey: process.env.NEXT_PUBLIC_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_DOMAIN,
     projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
     storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,

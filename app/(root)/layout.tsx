@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import {Toaster} from "@/components/ui/sonner";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import Dashboard from "@/components/Dashboard";
 import NavBar from "@/components/NavBar";
-import Image from "next/image";
-import logo from "@/public/foundation_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
 import React from "react";
 
 
@@ -29,10 +26,8 @@ export default function RootLayout({
                     <div className="flex flex-1 justify-center p-3">
                         {children}
                     </div>
-                        <Toaster position="top-right" />
                 </main>
             </SidebarProvider>
-
         </>
     );
 }
