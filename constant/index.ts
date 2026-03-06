@@ -15,8 +15,6 @@ export const archivisteDashboardMenu: SidenavItem[] = [
     },
 ];
 
-
-
 export const juristeDashboardMenu: SidenavItem[] = [
     {
         title: "Projects",
@@ -25,3 +23,4 @@ export const juristeDashboardMenu: SidenavItem[] = [
     },
 ];
 
+export const ONE_WEEK = 60 * 60 * 24 * 7 ;

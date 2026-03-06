@@ -37,6 +37,9 @@ export function translateFirebaseError(message: string): string {
   if (message.includes("auth/weak-password")) {
     return "Le mot de passe est trop faible.";
   }
+  if (message.includes("auth/admin-credentials-missing")) {
+    return "Configuration du serveur incomplète (clés d'administration manquantes).";
+  }
 
   return message || "Une erreur inconnue est survenue.";
 }

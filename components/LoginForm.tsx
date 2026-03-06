@@ -3,13 +3,14 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import { loginWithIdToken } from "@/lib/actions/Auth.action"
+import { signIn} from "@/lib/actions/Auth.action"
 import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
+import {useRouter} from "next/navigation"
 import { toast } from "sonner"
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/Firebase";
+import { auth } from "@/Firebase/client";
 import { translateFirebaseError } from "@/lib/utils";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {SignInParams} from "@/types";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -22,20 +23,25 @@ export function LoginForm() {
     setIsPending(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
-      
-      const result = await loginWithIdToken(idToken);
-      
-      if (result.success) {
-        toast.success("Login successful!");
-        router.push("/");
-      } else {
-        toast.error(result.error);
+      const userCredential = await signInWithEmailAndPassword(auth,email,password);
+
+      const idToken =  await userCredential.user.getIdToken();
+      const uid = userCredential.user.uid;
+
+      if(!idToken){
+        toast.error('sign in failed');
+        return
       }
+      await signIn({email,idToken,uid} as SignInParams);
+
+      router.push("/")
+
     } catch (err) {
-      const errorMessage = err instanceof Error ? translateFirebaseError(err.message) : "Une erreur est survenue lors de la connexion.";
-      toast.error(errorMessage);
+      console.error("err",err)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const message = translateFirebaseError(err.message)
+      toast.error(message);
     } finally {
       setIsPending(false);
     }

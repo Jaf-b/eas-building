@@ -14,7 +14,7 @@ import {Calendar, Home, Inbox, LayoutDashboard, LogOut, Search, Settings} from "
 import Link from "next/link";
 import { SidenavItem } from "@/types";
 import { usePathname } from "next/navigation";
-import { logout } from "@/lib/actions/Auth.action";
+//import { logout } from "@/lib/actions/Auth.action";
 
 export function Sidenav({items}:{items:SidenavItem[]}) {
     const pathname = usePathname();
@@ -71,7 +71,6 @@ export function Sidenav({items}:{items:SidenavItem[]}) {
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             className="sidenav-btn-item text-red-500 hover:text-red-600 hover:bg-red-50"
-                            onClick={async () => await logout()}
                         >
                             <LogOut />
                             <span>Déconnexion</span>

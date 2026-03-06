@@ -33,3 +33,8 @@ export interface Project {
     progress: number;
     iconColor: string;
 }
+export interface SignInParams {
+    email: string;
+    idToken: string;
+    uid:string;
+}
