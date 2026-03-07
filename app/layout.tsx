@@ -17,12 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`dark ${raleway.variable} antialiased`}
+        className={` dark ${raleway.variable} antialiased`}
       >
-        <TooltipProvider>
-          {children}
-          <Toaster position="top-right" />
-        </TooltipProvider>
+            <TooltipProvider>
+              {children}
+            </TooltipProvider>
+            <Toaster position="top-right" />
       </body>
     </html>
   );
