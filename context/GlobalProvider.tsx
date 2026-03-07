@@ -23,13 +23,14 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async () => {
-        const user =  await getCurrentUser()
-        if(!user) {
-          setUser(null);
-        }
-        setUser(user!)
-        console.log("user",user)
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } catch {
+        setUser(null);
+      } finally {
         setLoading(false);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -40,7 +41,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       toast.error("User not found please login");
         router.push("/login");
     }
-    console.log(user)
   }, [loading, user, router]);
 
   const value = {

@@ -34,7 +34,5 @@ export interface Project {
     iconColor: string;
 }
 export interface SignInParams {
-    email: string;
     idToken: string;
-    uid:string;
 }

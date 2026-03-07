@@ -32,9 +32,12 @@ export function LoginForm() {
         toast.error('sign in failed');
         return
       }
-      await signIn({email,idToken,uid} as SignInParams);
+      await signIn({email,idToken,uid} as SignInParams).then((response) =>{
+        if(!response?.success) toast.error(response?.message);
+        toast.success(response?.message);
+        router.push("/");
+      });
 
-      router.push("/")
 
     } catch (err) {
       console.error("err",err)

@@ -9,9 +9,15 @@ import {cookies} from "next/headers";
 import {auth, db} from "@/Firebase/admin";
 import {ONE_WEEK} from "@/constant";
 import {SignInParams, User} from "@/types";
+import {signOut} from "@firebase/auth";
 
 export const setSessionCookie = async (idToken: string) => {
     const cookieStore = await cookies();
+
+    const decoded = await auth.verifyIdToken(idToken);
+      if (Date.now() / 1000 - decoded.auth_time > 5 * 60) {
+                throw new Error("Recent sign-in required");
+          }
 
     const sessionCookie = await auth.createSessionCookie(idToken,{
         expiresIn : ONE_WEEK * 1000,
@@ -26,11 +32,12 @@ export const setSessionCookie = async (idToken: string) => {
 }
 
 export const signIn = async (params:SignInParams) => {
-    const {email, idToken,uid} = params;
+    const {idToken} = params;
 
     try {
-        const userRecord = await auth.getUserByEmail(email);
-        //const isUserExist  = await db.collection("users").doc(uid).get();
+        const decoded = await auth.verifyIdToken(idToken);
+        //const userDoc = await db.collection("users").doc(decoded.uid).get();
+        const userRecord = await auth.getUserByEmail(decoded.email!);
         if(!userRecord){
             return {
                 success: false,
@@ -71,6 +78,7 @@ export const getCurrentUser = async ():Promise<User | null> => {
             ...userRecord.data()
         }as User
     }catch (e) {
+        cookieStore.delete("auth-session")
         console.log(e)
         return null
     }
@@ -79,29 +87,12 @@ export const getCurrentUser = async ():Promise<User | null> => {
 // logout
 
 
-/* export const logout  = async (): Promise<void> => {
+ export const logout  = async (): Promise<void> => {
     try {
-        if (!hasAdminCredentials) {
-            const cookieStore = await cookies();
-            cookieStore.delete("auth-token");
-            redirect("/login");
-            return;
-        }
-
         const cookieStore = await cookies();
-        const sessionCookie = cookieStore.get("auth-token")?.value;
-
-        if (sessionCookie) {
-            const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie).catch(() => null);
-            if (decodedClaims) {
-                await adminAuth.revokeRefreshTokens(decodedClaims.sub);
-            }
-        }
-        cookieStore.delete("auth-token");
-    } catch (err) {
-        handleError(err);
+        const sessionCookie = cookieStore.get("auth-session");
+        cookieStore.delete("auth-session");
+    }catch (e){
+        console.log(e)
     }
-    redirect("/login");
 }
-
- */
